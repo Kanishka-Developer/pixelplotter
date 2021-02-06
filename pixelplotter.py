@@ -6,7 +6,7 @@
 
 count = 3            # time in seconds before plotting begins
 timeout = 0          # rendering timeout (0 to disable)
-width = 128	         # width of output image in px
+width = 128	     # width of output image in px
 tool = "pencil"      # tool to use for plotting;       NOTE: brush is exclusive to MS Paint
 size = 1             # tool size to use for plotting   INTEGER, 1 - 4
 poff = 4             # offset in px between successive render pixels
@@ -25,14 +25,14 @@ try_count = 3        # number of times to try fetching an image from the API
 
 #! if the above conditions don't apply to you, change the values below.
 
-palx = 492        # x coordinate of centre of first box in palette
-paly = 993        # y coordinate of centre of first box in palette
-boff = 30         # shortest distance between centres of two palette boxes
-canx = 365 + 20   # x coordinate marking beginning of canvas (leave some margin)
-cany = 200 + 20   # y coordinate marking beginning of canvas (leave some margin)
+palx = 492           # x coordinate of centre of first box in palette
+paly = 993           # y coordinate of centre of first box in palette
+boff = 30            # shortest distance between centres of two palette boxes
+canx = 365 + 20      # x coordinate marking beginning of canvas (leave some margin)
+cany = 200 + 20      # y coordinate marking beginning of canvas (leave some margin)
 pencil_coords = (845, 1008) # coordinates of centre of PENCIL button
 size_opt0 = (1050, 1008)    # coordinates of centre of first SIZE option
-size_ooff = 65    # horizontal distance between centres of adjacent SIZE options
+size_ooff = 65       # horizontal distance between centres of adjacent SIZE options
 
 # ---------------------------------------------------------------------------------------
 
