@@ -7,7 +7,7 @@ Please only use SKRiBBLER if all participants consent to it.<br>I do not condone
 ## How to set up Custom Search Engine API:
 - Sign up for a [Google Cloud Platform](https://cloud.google.com/) account.<br>A free account should be good enough. (?)
 - Create a new credential in your [GCP Console](https://console.cloud.google.com/).
-- Get the API Key. Restrict it to CSE.
+- Get the `API Key`. Restrict it to CSE.
 - Visit the [Google Programmable Search Engine](https://programmablesearchengine.google.com/cse/all).
 - Create a custom image search engine.<br>There are many great resources online on how to configure your engine.
 - Get the `cx`.
