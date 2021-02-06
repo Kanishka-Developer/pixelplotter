@@ -6,7 +6,7 @@
 
 count = 3            # time in seconds before plotting begins
 timeout = 0          # rendering timeout (0 to disable)
-width = 128	     # width of output image in px
+width = 128	         # width of output image in px
 tool = "pencil"      # tool to use for plotting;       NOTE: brush is exclusive to MS Paint
 size = 1             # tool size to use for plotting   INTEGER, 1 - 4
 poff = 4             # offset in px between successive render pixels
