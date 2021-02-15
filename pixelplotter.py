@@ -1,20 +1,21 @@
 # ----------------------------
-#! ---  PixelPlotter 2.0  --- !
+#! ---  PixelPlotter 2.1  --- !
 #?--- Kanishka Chakraborty ---?
 
 #? CHANGE THESE VALUES TO CUSTOMIZE OUTPUT:
 
-count = 3            # time in seconds before plotting begins
-timeout = 0          # rendering timeout (0 to disable)
-width = 128	         # width of output image in px
-tool = "pencil"      # tool to use for plotting;       NOTE: brush is exclusive to MS Paint
-size = 1             # tool size to use for plotting   INTEGER, 1 - 4
-poff = 4             # offset in px between successive render pixels
-renderer = "buckets" # renderer to use;                RECOMMENDED: buckets   ALT: scanline
+count = 3             # time in seconds before plotting begins
+timeout = 0           # rendering timeout (0 to disable)
+width = 128           # width of output image in px
+tool = 'brush'        # tool to use for plotting;       NOTE: brush is exclusive to MS Paint
+size = 3              # tool size to use for plotting;  INTEGER, 1 - 4
+poff = 4              # offset in px between successive render pixels
+renderer = 'buckets'  # renderer to use;                RECOMMENDED: buckets   ALT: scanline
+target = 'paint'      # plotter target application;     STRING, 'paint' / 'skribbl'
 
 #? Google Custom Search API config:
 
-cse_enabled = True   # turn Custom Search Engine on or off
+cse_enabled = False  # turn Custom Search Engine on or off
 api_key = ''
 cx = ''
 try_count = 3        # number of times to try fetching an image from the API
@@ -25,14 +26,12 @@ try_count = 3        # number of times to try fetching an image from the API
 
 #! if the above conditions don't apply to you, change the values below.
 
-palx = 492           # x coordinate of centre of first box in palette
-paly = 993           # y coordinate of centre of first box in palette
-boff = 30            # shortest distance between centres of two palette boxes
-canx = 365 + 20      # x coordinate marking beginning of canvas (leave some margin)
-cany = 200 + 20      # y coordinate marking beginning of canvas (leave some margin)
-pencil_coords = (845, 1008) # coordinates of centre of PENCIL button
-size_opt0 = (1050, 1008)    # coordinates of centre of first SIZE option
-size_ooff = 65       # horizontal distance between centres of adjacent SIZE options
+pal_coords = (492, 993)       # coordinates of centre of first color box in palette
+boff = 30         # shortest distance between centres of two palette boxes
+can_coords = (365+20, 200+20) # coordinates of beginning of canvas, leaving some margin
+pencil_coords = (845, 1008)   # coordinates of centre of PENCIL button
+size_opt0 = (1050, 1008)      # coordinates of centre of first SIZE option
+size_ooff = 65    # horizontal distance between centres of adjacent SIZE options
 
 # ---------------------------------------------------------------------------------------
 
@@ -52,37 +51,33 @@ color_buckets = [[[], [], [], [], [], [], [], [], [], [], []], [[], [], [], [], 
 
 palette = [] # internal variable for colorspace conversion; do NOT change
 
-
 #! - MS Paint Compatibility -
-#! comment out whole section for skribbl.io!
-'''
-# below coordinates are valid for 1080p 125%
-# assuming the toolbar is fully expanded and that the Paint window starts at (0, 0)
-# the easiest way to ensure that is to maximise the Paint window.
+if target == 'paint':
+	# below coordinates are valid for 1080p 125%
+	# assuming the toolbar is fully expanded and that the Paint window starts at (0, 0)
+	# the easiest way to ensure that is to maximise the Paint window.
 
-#! if the above conditions don't apply to you, change the values below.
+	#! if the above conditions don't apply to you, change the values below.
 
-palx = 888        # x coordinate of centre of first box in palette
-paly = 75         # y coordinate of centre of first box in palette
-boff = 27         # shortest distance between centres of two palette boxes
-canx = 17 + 20    # x coordinate marking beginning of canvas (leave some margin)
-cany = 197 + 20   # y coordinate marking beginning of canvas (leave some margin)
-brush_coords = (388, 86)    # coordinates of centre of BRUSH button
-pencil_coords = (283, 86)   # coordinates of centre of PENCIL button
-toolsize_coords = (738, 86) # coordinates of centre of SIZE button
-size_opt0 = (794, 170)      # coordinates of centre of first SIZE option
-size_ooff = 50    # vertical distance between centres of adjacent SIZE options
+	pal_coords = (888, 75)        # coordinates of centre of first color box in palette
+	boff = 27         # shortest distance between centres of two palette boxes
+	can_coords = (17+20, 197+20)  # coordinates of beginning of canvas, leaving some margin
+	brush_coords = (388, 86)      # coordinates of centre of BRUSH button
+	pencil_coords = (283, 86)     # coordinates of centre of PENCIL button
+	toolsize_coords = (738, 86)   # coordinates of centre of SIZE button
+	size_opt0 = (794, 170)        # coordinates of centre of first SIZE option
+	size_ooff = 50    # vertical distance between centres of adjacent SIZE options
 
-#? --- MS Paint Default Palette ---
-#?           Black        Grey 50%       Dark Red         Red          Orange          Yellow          Green        Turquoise        Indigo         Purple             White           Grey 25%         Brown            Rose             Gold        Light yellow         Lime       Light turquoise     Blue-grey         Lavender
-colors = [[(0, 0, 0), (127, 127, 127), (136, 0, 21), (237, 28, 36), (255, 127, 39), (255, 242, 0), (34, 177, 76), (0, 162, 232), (63, 72, 204), (163, 73, 164)], [(255, 255, 255), (195, 195, 195), (185, 122, 87), (255, 174, 201), (255, 201, 14), (239, 228, 176), (181, 230, 29), (153, 217, 234), (112, 146, 190), (200, 191, 231)]]
+	#? --- MS Paint Default Palette ---
+	#?           Black        Grey 50%       Dark Red         Red          Orange          Yellow          Green        Turquoise        Indigo         Purple             White           Grey 25%         Brown            Rose             Gold        Light yellow         Lime       Light turquoise     Blue-grey         Lavender
+	colors = [[(0, 0, 0), (127, 127, 127), (136, 0, 21), (237, 28, 36), (255, 127, 39), (255, 242, 0), (34, 177, 76), (0, 162, 232), (63, 72, 204), (163, 73, 164)], [(255, 255, 255), (195, 195, 195), (185, 122, 87), (255, 174, 201), (255, 201, 14), (239, 228, 176), (181, 230, 29), (153, 217, 234), (112, 146, 190), (200, 191, 231)]]
 
-color_buckets = [[[], [], [], [], [], [], [], [], [], []], [[], [], [], [], [], [], [], [], [], []]] # required for buckets renderer
+	color_buckets = [[[], [], [], [], [], [], [], [], [], []], [[], [], [], [], [], [], [], [], [], []]] # required for buckets renderer
 
-# select the brush tool in MS Paint
-def select_brush():
-	pyautogui.click(brush_coords, clicks=2)
-'''
+	# select the brush tool in MS Paint
+	def select_brush():
+		pyautogui.click(brush_coords, clicks=2)
+
 #! - - - - - - - - - - - - - !
 
 # build palette by unpacking color matrix:
@@ -136,12 +131,12 @@ def paint_scanline():
 				yoff = 0 if target in colors[0] else 1
 				xoff = colors[yoff].index(target)
 				if target != old_target:
-					pyautogui.click(palx + xoff*boff, paly + yoff*boff, clicks=2)
-					pyautogui.click(palx + xoff*boff, paly + yoff*boff, clicks=2)
+					pyautogui.click(pal_coords[0] + xoff*boff, pal_coords[1] + yoff*boff, clicks=2)
+					pyautogui.click(pal_coords[0] + xoff*boff, pal_coords[1] + yoff*boff, clicks=2)
 					old_target = target
 				pcount += 1
 				print("\r", progress(pcount, canvas.size), "%", " drawn.", sep='', end='')
-				pyautogui.click(canx + w*poff, cany + h*poff, clicks=2)
+				pyautogui.click(can_coords[0] + w*poff, can_coords[1] + h*poff, clicks=2)
 
 # plot image one color at a time:
 def paint_buckets():
@@ -172,10 +167,10 @@ def paint_buckets():
 				dom_bsize = len(bucket)
 	# fill canvas with dominant color:
 	bucket = color_buckets[dom_yoff][dom_xoff]
-	pyautogui.click(palx + dom_xoff*boff, paly + dom_yoff*boff, clicks=2)
-	pyautogui.click(palx + dom_xoff*boff, paly + dom_yoff*boff, clicks=2)
+	pyautogui.click(pal_coords[0] + dom_xoff*boff, pal_coords[1] + dom_yoff*boff, clicks=2)
+	pyautogui.click(pal_coords[0] + dom_xoff*boff, pal_coords[1] + dom_yoff*boff, clicks=2)
 	pyautogui.click(pencil_coords[0]+ ((2 * size_ooff) if len(colors[0]) == 11 else boff), pencil_coords[1], clicks=2)
-	pyautogui.click(canx-20, cany-20)
+	pyautogui.click(can_coords[0]-20, can_coords[1]-20)
 	time.sleep(0.25)
 	pcount += len(bucket)
 	print("\r", progress(pcount, canvas.size), "%", " drawn.", sep='', end='')
@@ -199,15 +194,15 @@ def paint_buckets():
 			if color == dom_col: # set as canvas color; no need to plot
 				continue
 			if len(bucket):
-				pyautogui.click(palx + xoff*boff, paly + yoff*boff, clicks=2)
-				pyautogui.click(palx + xoff*boff, paly + yoff*boff, clicks=2)
+				pyautogui.click(pal_coords[0] + xoff*boff, pal_coords[1] + yoff*boff, clicks=2)
+				pyautogui.click(pal_coords[0] + xoff*boff, pal_coords[1] + yoff*boff, clicks=2)
 				for pixel in bucket:
 					if contd: # skip plotting if 'esc' was pressed
 						if time.time() - start > timeout and timeout: # break out if time is up
 							break                                     # and timeout is enabled
 						pcount += 1
 						print("\r", progress(pcount, canvas.size), "%", " drawn.", sep='', end='')
-						pyautogui.click(canx + pixel[0]*poff, cany + pixel[1]*poff, clicks=2)
+						pyautogui.click(can_coords[0] + pixel[0]*poff, can_coords[1] + pixel[1]*poff, clicks=2)
 
 # select the pencil tool
 def select_pencil():
@@ -231,10 +226,11 @@ listener.start()
 # keep accepting new references till user presses 'Cancel'
 # or sends a KeyboardInterrupt:
 while True:
+	contd = True
 	start_n = 1
 	if cse_enabled:
 		# pop-up input window for reference phrase and save query:
-		query = pyautogui.prompt(text='--- Enter cue phrase ---', title='PixelPlotter 2.0')
+		query = pyautogui.prompt(text='--- Enter cue phrase ---', title='PixelPlotter 2.1')
 		# handle 'Cancel':
 		if query == None:
 			break
@@ -279,7 +275,7 @@ while True:
 				print("Something went wrong. Retrying... ", start_n, " of ", try_count, ".", sep='')
 				start_n += 1
 				if start_n >= (try_count + 1):
-					pyautogui.alert(text='Fetching image from CSE API failed. Falling back to manual input.', title='PixelPlotter 2.0')
+					pyautogui.alert(text='Fetching image from CSE API failed. Falling back to manual input.', title='PixelPlotter 2.1')
 					print("Fetching image from CSE API failed. Falling back to manual input.")
 					break
 	else:
@@ -338,14 +334,17 @@ while True:
 
 	# reselect black in the palette:
 	if len(colors[0]) == 11:
-		pyautogui.click(palx, paly+boff, clicks=2)
-		pyautogui.click(palx, paly+boff, clicks=2)
+		pyautogui.click(pal_coords[0], pal_coords[1]+boff, clicks=2)
+		pyautogui.click(pal_coords[0], pal_coords[1]+boff, clicks=2)
 	else:
-		pyautogui.click(palx, paly, clicks=2)
-		pyautogui.click(palx, paly, clicks=2)
+		pyautogui.click(pal_coords[0], pal_coords[1], clicks=2)
+		pyautogui.click(pal_coords[0], pal_coords[1], clicks=2)
 
 	# rinse, repeat for next reference.
 	del query, response, js0n, img_link, dat, img_file, img, canvas
-	color_buckets = [[[], [], [], [], [], [], [], [], [], [], []], [[], [], [], [], [], [], [], [], [], [], []]]
+	if target == 'paint':
+		color_buckets = [[[], [], [], [], [], [], [], [], [], []], [[], [], [], [], [], [], [], [], [], []]]
+	elif target == 'skribbl':
+		color_buckets = [[[], [], [], [], [], [], [], [], [], [], []], [[], [], [], [], [], [], [], [], [], [], []]]
 
 print("\n--- TERMINATED ---") # mark end of execution. :)
